@@ -11,37 +11,34 @@ namespace Simplenoid.Controllers
     /// </summary>
     public class LevelController : BaseController
     {
-        private Level[] _levels;
+        private LevelsVariable _levels;
 
         [SerializeField] private int _selectedIndexLevel;
         [SerializeField] private Level _selectedLevel;
-        [SerializeField] private Board _board;
+
+        private ManagerBalls _managerBalls;
         /// <summary>
         /// Инициализация контроллера
         /// </summary>
         /// <param name="board">Доска</param>
         /// <param name="levels">Уровни</param>
-        public void InitController(Board board, Level[] levels)
+        public void InitController(ManagerBalls managerBalls, BoardReference board, LevelsReference levels)
         {
-            _board = board;
-            _levels = levels;
+            _managerBalls = managerBalls;
             _selectedIndexLevel = 0;
-            _selectedLevel = _levels[_selectedIndexLevel];
-            var colliderController = Toolbox.Instance.Add<CollideController>();
-            colliderController.SelectedLevel = _selectedLevel;
+            _selectedLevel = _levels.Items[_selectedIndexLevel];
         }
         private void ChangeLevel()
         {
             _selectedLevel.gameObject.SetActive(false);
             _selectedIndexLevel++;
-            if (_selectedIndexLevel == _levels.Length)
+            if (_selectedIndexLevel == _levels.Items.Count)
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                 return;
             }
-            _selectedLevel = _levels[_selectedIndexLevel];
+            _selectedLevel = _levels.Items[_selectedIndexLevel];
             _selectedLevel.gameObject.SetActive(true);
-            Toolbox.Instance.Add<CollideController>().SelectedLevel = _selectedLevel;
         }
         /// <summary>
         /// Проверка завершенности уровня
@@ -51,9 +48,8 @@ namespace Simplenoid.Controllers
             if (_selectedLevel.Blocks.Where(b => b.isAlive).Count() == 0)
             {
                 ChangeLevel();
-                var ballsController = Toolbox.Instance.Get<BallsController>();
-                ballsController.ClearBalls();
-                ballsController.InstantiateBall(_board);
+                _managerBalls.ClearBalls();
+                _managerBalls.InstantiateBall();
             }
         }
     }

@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Simplenoid.Helpers;
+using Simplenoid.Interface;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Simplenoid.Controllers
 {
@@ -10,90 +9,207 @@ namespace Simplenoid.Controllers
     /// </summary>
     public class BallsController : BaseController
     {
-        [SerializeField] private List<Ball> _balls = new List<Ball>();
-        /// <summary>
-        /// Активные шары
-        /// </summary>
-        public IReadOnlyList<Ball> Balls => _balls;
+        [SerializeField] private BallsVariable _balls;
+        [SerializeField] private BoardReference _board;
+        [SerializeField] private BlocksReference _blocks;
+        [SerializeField] private BordersReference _borders;
 
-        private Ball _prefabBall;
-        /// <summary>
-        /// Режим ускорения шара
-        /// </summary>
-        public bool IsFaster { get; set; } = false;
-        /// <summary>
-        /// Режим замедления шара
-        /// </summary>
-        public bool IsSlowly { get; set; } = false;
-        /// <summary>
-        /// Делитель скорости
-        /// </summary>
-        public float Divider { get; private set; }
+        [SerializeField] private BoolVariable _isFaster;
+        [SerializeField] private BoolVariable _isSlowly;
+        [SerializeField] private FloatVariable _divider;
+
+        private ManagerBalls _managerBalls;
+        private ManagerBonuses _managerBonuses;
 
         protected override void Update()
         {
             base.Update();
 
-            foreach (var ball in Balls)
+            for (var i = 0; i < _balls.Items.Count; i++)
             {
-                ball.Move(Time.deltaTime);
+                var ball = _balls.Items[i];
+                Move(ball);
             }
         }
-        /// <summary>
-        /// Инициализация контроллера
-        /// </summary>
-        /// <param name="prefabBall">Префаб шарика</param>
-        /// <param name="divider">Делитель скорости</param>
-        public void InitController(Ball prefabBall, float divider = 2.0f)
+
+        public void InitController(ManagerBalls managerBalls, ManagerBonuses managerBonuses)
         {
-            _prefabBall = prefabBall;
-            Divider = divider;
+            _managerBalls = managerBalls;
+            _managerBonuses = managerBonuses;
         }
-        /// <summary>
-        /// Позиция мячика по середине доски
-        /// </summary>
-        /// <param name="board">Доска</param>
-        /// <param name="ball">Мячик</param>
-        /// <returns></returns>
-        public Vector3 GetDefaultPosition(Board board, Ball ball)
+
+        private Vector3 GetNextPosition(Ball ball)
         {
-            return new Vector3(board.Position.x + board.Size.x / 2 - ball.Size.x / 2, board.Position.y + board.Size.y, 0.0f);
-        }
-        /// <summary>
-        /// Добавление шарика
-        /// </summary>
-        /// <param name="board">Доска</param>
-        public void InstantiateBall(Board board)
-        {
-            var ball = Instantiate(_prefabBall, Vector3.zero, Quaternion.identity);
-            ball.Position = GetDefaultPosition(board, ball);
-            board.Ball = ball;
-            _balls.Add(ball);
-        }
-        /// <summary>
-        /// Удаление шарика
-        /// </summary>
-        /// <param name="ball">Мячик</param>
-        public void RemoveBall(Ball ball)
-        {
-            ball.InstanceObject.SetActive(false);
-            _balls.Remove(ball);
-            if (_balls.Count == 0)
+            var direction = ball.Delta;
+            if (_isFaster.Value)
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                direction *= _divider.Value;
+            }
+            if (_isSlowly.Value)
+            {
+                direction /= _divider.Value;
+            }
+            return ball.Position + direction;
+        }
+
+        private void Move(Ball ball)
+        {
+            if (ball.Delta.magnitude > Mathf.Epsilon)
+            {
+                var nextPosition = GetNextPosition(ball);
+                bool isBreakMoving = CheckBorders(ball, nextPosition);
+                if (isBreakMoving)
+                {
+                    return;
+                }
+                isBreakMoving = CheckBoard(ball, nextPosition);
+                if (isBreakMoving)
+                {
+                    return;
+                }
+                isBreakMoving = CheckBlocks(ball, nextPosition);
+                if (!isBreakMoving)
+                {
+                    ball.Position = nextPosition;
+                }
             }
         }
-        /// <summary>
-        /// Удаление всех мячиков
-        /// </summary>
-        public void ClearBalls()
+                
+        private bool OnCenter(Ball ball)
         {
-            foreach (var ball in Balls)
+            var centerBall = ball.Position.x + (ball.Size.x / 2);
+            if ((centerBall < (_board.Value.Position.x + _board.Value.Size.x - _board.Value.Size.x / 4)) && (centerBall > (_board.Value.Position.x + _board.Value.Size.x / 4)))
             {
-                ball.InstanceObject.SetActive(false);
-                Destroy(ball);
+                return true;
             }
-            _balls.Clear();
+            return false;
+        }
+
+        private bool OnTheLeftSide(Ball ball)
+        {
+            var centerBall = ball.Position.x + (ball.Size.x / 2);
+            var centerBoard = _board.Value.Position.x + (_board.Value.Size.x / 2);
+
+            return centerBall < centerBoard;
+        }
+
+        private bool Collide(Ball ball, Vector3 newPos, ICollidable collideObject)
+        {
+            if (collideObject != null)
+            {
+                if (newPos.x + ball.Size.x > collideObject.Position.x &&
+                    newPos.x < collideObject.Position.x + collideObject.Size.x &&
+                    newPos.y + ball.Size.y > collideObject.Position.y &&
+                    newPos.y < collideObject.Position.y + collideObject.Size.y)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void BumpBorder(Ball ball, Vector3 newPos, Border border)
+        {
+            // horizontal collision
+            if ((newPos.y > border.Position.y) && (newPos.y + ball.Size.y < border.Position.y + border.Size.y))
+            {
+                // from right
+                if ((newPos.x < border.Position.x + border.Size.x) && (newPos.x + ball.Size.x > border.Position.x + border.Size.x))
+                {
+                    ball.Delta = new Vector3(ball.Velocity.x, ball.Delta.y, 0.0f);
+                    return;
+                }
+                // from left
+                if ((newPos.x + ball.Size.x > border.Position.x) && (newPos.x < border.Position.x))
+                {
+                    ball.Delta = new Vector3(-ball.Velocity.x, ball.Delta.y, 0.0f);
+                    return;
+                }
+            }
+            // vertical collision
+            if ((newPos.x > border.Position.x) && (newPos.x + ball.Size.x < border.Position.x + border.Size.x))
+            {
+                // from bottom
+                if ((newPos.y + ball.Size.y > border.Position.y) && (newPos.y < border.Position.y))
+                {
+                    ball.Delta = new Vector3(ball.Delta.x, -ball.Velocity.y, 0.0f);
+                    return;
+                }
+                // from top
+                if ((newPos.y < border.Position.y + border.Size.y) && (newPos.y + ball.Size.y > border.Position.y + border.Size.y))
+                {
+                    ball.Delta = Vector3.zero;
+                    _managerBalls.RemoveBall(ball);
+                    return;
+                }
+            }
+        }
+
+        private bool CheckBorders(Ball ball, Vector3 newPos)
+        {
+            foreach (var border in _borders.Value)
+            {
+                if (Collide(ball, newPos, border))
+                {
+                    BumpBorder(ball, newPos, border);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        private void BumpBoard(Ball ball)
+        {
+            if (OnCenter(ball))
+            {
+                ball.Delta = new Vector3(0.0f, ball.Velocity.y, 0.0f);
+                return;
+            }
+            ball.Delta = new Vector3(OnTheLeftSide(ball) ? -ball.Velocity.x : ball.Velocity.x, ball.Velocity.y, 0.0f);
+        }
+
+
+        private bool CheckBoard(Ball ball, Vector3 newPos)
+        {
+            if (Collide(ball, newPos, _board.Value))
+            {
+                BumpBoard(ball);
+                return true;
+            }
+            return false;
+        }
+
+        private void BumpBlock(Ball ball, Block block)
+        {
+            ball.Delta = new Vector3(ball.Delta.x, -ball.Delta.y, 0.0f);
+
+            var damageableblock = block.GetComponent<ISetDamage>();
+            damageableblock?.SetDamage(ball.Damage);
+
+            if (block.Type == TypesBlocks.WithBonus)
+            {
+                _managerBonuses.InstantiateBonus(block);
+            }
+            Toolbox.Instance.Get<LevelController>().CheckLevel();
+        }
+
+        private bool CheckBlocks(Ball ball, Vector3 newPos)
+        {
+            foreach (var block in _blocks.Value)
+            {
+                if (!block.isAlive)
+                {
+                    continue;
+                }
+
+                if (Collide(ball, newPos, block))
+                {
+                    BumpBlock(ball, block);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

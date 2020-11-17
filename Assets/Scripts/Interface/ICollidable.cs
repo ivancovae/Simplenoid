@@ -17,9 +17,5 @@ namespace Simplenoid.Interface
         /// Позиция объекта
         /// </summary>
         Vector3 Position { get; }
-        /// <summary>
-        /// Следуеющая позиция при движение
-        /// </summary>
-        Vector3 NextPosition { get; }
     }
 }
