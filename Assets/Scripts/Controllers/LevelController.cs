@@ -22,9 +22,10 @@ namespace Simplenoid.Controllers
         /// </summary>
         /// <param name="board">Доска</param>
         /// <param name="levels">Уровни</param>
-        public void InitController(ManagerBalls managerBalls, BoardReference board, LevelsReference levels)
+        public void InitController(ManagerBalls managerBalls, LevelsVariable levels)
         {
             _managerBalls = managerBalls;
+            _levels = levels;
             _selectedIndexLevel = 0;
             _selectedLevel = _levels.Items[_selectedIndexLevel];
         }

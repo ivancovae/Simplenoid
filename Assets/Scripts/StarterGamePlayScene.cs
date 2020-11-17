@@ -11,26 +11,15 @@ namespace Simplenoid
     /// </summary>
     public class StarterGamePlayScene : Starter
     {
-
-        [SerializeField] private BallsVariable _balls;
-        [SerializeField] private BoardReference _board;
-        [SerializeField] private BlocksVariable _blocks;
-        [SerializeField] private BordersReference _borders;
-        [SerializeField] private LevelsReference _levels;
-        [SerializeField] private BonusesVariable _bonuses;
-
-        [SerializeField] private BoolVariable _isFaster;
-        [SerializeField] private BoolVariable _isSlowly;
-        [SerializeField] private FloatVariable _divider;
-        [SerializeField] private FloatVariable _activeTime;
+        [SerializeField] private UserDataVariable _userDataVariable;
 
         protected override void Start()
         {
             base.Start();
             Toolbox.Instance.Setup();
 
-            var managerBalls = new ManagerBalls(_balls, _board);
-            var managerBonuses = new ManagerBonuses(managerBalls, _bonuses, _board);
+            var managerBalls = new ManagerBalls(_userDataVariable.Balls, _userDataVariable.Board);
+            var managerBonuses = new ManagerBonuses(managerBalls, _userDataVariable.Bonuses, _userDataVariable.Board);
 
             // добавление контроллера управления мячиками
             var ballController = Toolbox.Instance.Add<BallsController>();
@@ -38,11 +27,11 @@ namespace Simplenoid
 
             // добавление контроллера контроля уровней
             var levelController = Toolbox.Instance.Add<LevelController>();
-            levelController.InitController(managerBalls, _board, _levels);
+            levelController.InitController(managerBalls, _userDataVariable.Levels);
 
             // добавление контроллера управления бонусами
             var bonusController = Toolbox.Instance.Add<BonusController>();
-            bonusController.InitController(managerBonuses, _bonuses);
+            bonusController.InitController(managerBonuses, _userDataVariable.Bonuses);
         }
     }
 }

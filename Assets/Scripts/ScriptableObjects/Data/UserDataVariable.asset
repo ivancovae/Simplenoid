@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c41923d261b03ce4c83d543b78ebf41b, type: 3}
+  m_Name: UserDataVariable
+  m_EditorClassIdentifier: 
+  Balls: {fileID: 11400000, guid: a2404396415dc0a45b415673a9af552f, type: 2}
+  Board: {fileID: 11400000, guid: 80891d0385ecdc344ae01bb6564a949d, type: 2}
+  Blocks: {fileID: 11400000, guid: 91dba32f6254b7140aa236c0d6858827, type: 2}
+  Borders: {fileID: 11400000, guid: df7c536c0ff2bfb4cb211897b93c526d, type: 2}
+  Levels: {fileID: 11400000, guid: c73e7a5c91cc1d244901cd561e26227a, type: 2}
+  Bonuses: {fileID: 11400000, guid: 102287e0cd3ade04dbb236bb001ab79c, type: 2}
+  IsFaster: {fileID: 11400000, guid: 1659518a1ff336f48ab696d9423b03bb, type: 2}
+  IsSlowly: {fileID: 11400000, guid: fafc82e8fe05a3d448ecc8b0b5771eb9, type: 2}
+  IsLongBoard: {fileID: 11400000, guid: dffcd604751b90d4ca568fbfdf7d1e94, type: 2}
+  Divider: {fileID: 11400000, guid: d2f04c3ad20e18a4883930a68f06620c, type: 2}
+  ActiveTime: {fileID: 11400000, guid: 9e4f6533b409bad40833954723cf3323, type: 2}

@@ -9,9 +9,9 @@ namespace Simplenoid
     public class ManagerBalls
     {
         private BallsVariable _balls;
-        private BoardReference _board;
+        private BoardVariable _board;
 
-        public ManagerBalls(BallsVariable balls, BoardReference board)
+        public ManagerBalls(BallsVariable balls, BoardVariable board)
         {
             _balls = balls;
             _board = board;

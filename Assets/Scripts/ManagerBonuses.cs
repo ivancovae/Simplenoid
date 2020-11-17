@@ -9,7 +9,7 @@ namespace Simplenoid
     public class ManagerBonuses
     {
         public float ActiveTime { get; private set; } = 3.0f;
-        private BoardReference _board;
+        private BoardVariable _board;
         private BonusesVariable _bonuses;
 
         [SerializeField] private BoolVariable _isFaster;
@@ -18,7 +18,7 @@ namespace Simplenoid
 
         private ManagerBalls _managerBalls;
 
-        public ManagerBonuses(ManagerBalls manager, BonusesVariable bonuses, BoardReference board)
+        public ManagerBonuses(ManagerBalls manager, BonusesVariable bonuses, BoardVariable board)
         {
             _bonuses = bonuses;
             _board = board;
