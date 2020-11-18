@@ -22,7 +22,7 @@ namespace Simplenoid
         public Vector3 Delta { 
             get 
             {
-                return _delta * Time.deltaTime;
+                return _delta;
             }
             set
             {

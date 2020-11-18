@@ -10,9 +10,9 @@ namespace Simplenoid.Controllers
     public class BallsController : BaseController
     {
         [SerializeField] private BallsVariable _balls;
-        [SerializeField] private BoardReference _board;
-        [SerializeField] private BlocksReference _blocks;
-        [SerializeField] private BordersReference _borders;
+        [SerializeField] private BoardVariable _board;
+        [SerializeField] private BlocksVariable _blocks;
+        [SerializeField] private BordersVariable _borders;
 
         [SerializeField] private BoolVariable _isFaster;
         [SerializeField] private BoolVariable _isSlowly;
@@ -32,15 +32,23 @@ namespace Simplenoid.Controllers
             }
         }
 
-        public void InitController(ManagerBalls managerBalls, ManagerBonuses managerBonuses)
+        public void InitController(ManagerBalls managerBalls, ManagerBonuses managerBonuses, IBallsControllerData data)
         {
             _managerBalls = managerBalls;
             _managerBonuses = managerBonuses;
+
+            _balls = data.GetBalls;
+            _board = data.GetBoard;
+            _blocks = data.GetBlocks;
+            _borders = data.GetBorders;
+            _isFaster = data.GetIsFaster;
+            _isSlowly = data.GetIsSlowly;
+            _divider = data.GetDivider;
         }
 
         private Vector3 GetNextPosition(Ball ball)
         {
-            var direction = ball.Delta;
+            var direction = ball.Delta * Time.deltaTime;
             if (_isFaster.Value)
             {
                 direction *= _divider.Value;
@@ -78,7 +86,7 @@ namespace Simplenoid.Controllers
         private bool OnCenter(Ball ball)
         {
             var centerBall = ball.Position.x + (ball.Size.x / 2);
-            if ((centerBall < (_board.Value.Position.x + _board.Value.Size.x - _board.Value.Size.x / 4)) && (centerBall > (_board.Value.Position.x + _board.Value.Size.x / 4)))
+            if ((centerBall < (_board.ObjectOnScene.Position.x + _board.ObjectOnScene.Size.x - _board.ObjectOnScene.Size.x / 4)) && (centerBall > (_board.ObjectOnScene.Position.x + _board.ObjectOnScene.Size.x / 4)))
             {
                 return true;
             }
@@ -88,7 +96,7 @@ namespace Simplenoid.Controllers
         private bool OnTheLeftSide(Ball ball)
         {
             var centerBall = ball.Position.x + (ball.Size.x / 2);
-            var centerBoard = _board.Value.Position.x + (_board.Value.Size.x / 2);
+            var centerBoard = _board.ObjectOnScene.Position.x + (_board.ObjectOnScene.Size.x / 2);
 
             return centerBall < centerBoard;
         }
@@ -110,19 +118,21 @@ namespace Simplenoid.Controllers
 
         private void BumpBorder(Ball ball, Vector3 newPos, Border border)
         {
+            var ballVelocity = ball.Velocity;
+            var ballDelta = ball.Delta;
             // horizontal collision
             if ((newPos.y > border.Position.y) && (newPos.y + ball.Size.y < border.Position.y + border.Size.y))
             {
                 // from right
                 if ((newPos.x < border.Position.x + border.Size.x) && (newPos.x + ball.Size.x > border.Position.x + border.Size.x))
                 {
-                    ball.Delta = new Vector3(ball.Velocity.x, ball.Delta.y, 0.0f);
+                    ball.Delta = new Vector3(ballVelocity.x, ballDelta.y, 0.0f);
                     return;
                 }
                 // from left
                 if ((newPos.x + ball.Size.x > border.Position.x) && (newPos.x < border.Position.x))
                 {
-                    ball.Delta = new Vector3(-ball.Velocity.x, ball.Delta.y, 0.0f);
+                    ball.Delta = new Vector3(-ballVelocity.x, ballDelta.y, 0.0f);
                     return;
                 }
             }
@@ -132,7 +142,7 @@ namespace Simplenoid.Controllers
                 // from bottom
                 if ((newPos.y + ball.Size.y > border.Position.y) && (newPos.y < border.Position.y))
                 {
-                    ball.Delta = new Vector3(ball.Delta.x, -ball.Velocity.y, 0.0f);
+                    ball.Delta = new Vector3(ballDelta.x, -ballVelocity.y, 0.0f);
                     return;
                 }
                 // from top
@@ -147,7 +157,7 @@ namespace Simplenoid.Controllers
 
         private bool CheckBorders(Ball ball, Vector3 newPos)
         {
-            foreach (var border in _borders.Value)
+            foreach (var border in _borders.Items)
             {
                 if (Collide(ball, newPos, border))
                 {
@@ -172,7 +182,7 @@ namespace Simplenoid.Controllers
 
         private bool CheckBoard(Ball ball, Vector3 newPos)
         {
-            if (Collide(ball, newPos, _board.Value))
+            if (Collide(ball, newPos, _board.ObjectOnScene))
             {
                 BumpBoard(ball);
                 return true;
@@ -196,7 +206,7 @@ namespace Simplenoid.Controllers
 
         private bool CheckBlocks(Ball ball, Vector3 newPos)
         {
-            foreach (var block in _blocks.Value)
+            foreach (var block in _blocks.Items)
             {
                 if (!block.isAlive)
                 {

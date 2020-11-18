@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 225c774fa6968e04ab17a1abbc196543, type: 3}
   m_Name: BoardVariable
   m_EditorClassIdentifier: 
-  Value: {fileID: 0}
+  PrefabBoard: {fileID: 1576128291131777625, guid: 7db30d07a83ba574ab7781048b7e3ed6,
+    type: 3}
+  ObjectOnScene: {fileID: 0}

@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5971516ee7b875d4c826809c51b04064, type: 3}
   m_Name: BordersVariable
   m_EditorClassIdentifier: 
-  Value: []
+  PrefabBorder: {fileID: 1864260825797088926, guid: 9d24e6e631df64d4dbee89dba8b2803c,
+    type: 3}

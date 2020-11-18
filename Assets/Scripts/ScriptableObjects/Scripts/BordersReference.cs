@@ -9,6 +9,6 @@ namespace Simplenoid
     public class BordersReference
     {
         public BordersVariable Variable;
-        public IReadOnlyList<Border> Value => Variable.Value;
+        public IReadOnlyList<Border> Value => Variable.Items;
     }
 }

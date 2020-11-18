@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using Simplenoid.Interface;
+
 namespace Simplenoid
 {
     public class ManagerBalls
@@ -11,19 +13,19 @@ namespace Simplenoid
         private BallsVariable _balls;
         private BoardVariable _board;
 
-        public ManagerBalls(BallsVariable balls, BoardVariable board)
+        public ManagerBalls(IBallsData data)
         {
-            _balls = balls;
-            _board = board;
+            _balls = data.GetBalls;
+            _board = data.GetBoard;
         }
 
-        private Vector3 GetDefaultPosition(Ball ball) => new Vector3(_board.Value.Position.x + _board.Value.Size.x / 2 - ball.Size.x / 2, _board.Value.Position.y + _board.Value.Size.y, 0.0f);
+        private Vector3 GetDefaultPosition(Ball ball) => new Vector3(_board.ObjectOnScene.Position.x + _board.ObjectOnScene.Size.x / 2 - ball.Size.x / 2, _board.ObjectOnScene.Position.y + _board.ObjectOnScene.Size.y, 0.0f);
         
         public void InstantiateBall()
         {
             var ball = GameObject.Instantiate(_balls.PrefabBall, Vector3.zero, Quaternion.identity);
             ball.Position = GetDefaultPosition(ball);
-            _board.Value.Ball = ball;
+            _board.ObjectOnScene.Ball = ball;
             _balls.Add(ball);
         }
 

@@ -9,6 +9,6 @@ namespace Simplenoid
     public class BoardReference
     {
         public BoardVariable Variable;
-        public Board Value => Variable.Value;
+        public Board Value => Variable.ObjectOnScene;
     }
 }

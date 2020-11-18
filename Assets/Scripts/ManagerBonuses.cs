@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+using Simplenoid.Interface;
+
 namespace Simplenoid
 {
     public class ManagerBonuses
@@ -18,10 +20,10 @@ namespace Simplenoid
 
         private ManagerBalls _managerBalls;
 
-        public ManagerBonuses(ManagerBalls manager, BonusesVariable bonuses, BoardVariable board)
+        public ManagerBonuses(ManagerBalls manager, IBonusData bonusData)
         {
-            _bonuses = bonuses;
-            _board = board;
+            _bonuses = bonusData.GetBonuses;
+            _board = bonusData.GetBoard;
             _managerBalls = manager;
 
         }
@@ -69,7 +71,7 @@ namespace Simplenoid
         private void ActiveSlow()
         {
             _isSlowly.Value = true;
-            _board.Value.Invoke("DeactiveSlow", ActiveTime);
+            _board.ObjectOnScene.Invoke("DeactiveSlow", ActiveTime);
         }
 
         private void DeactiveFast()
@@ -80,7 +82,7 @@ namespace Simplenoid
         private void ActiveFast()
         {
             _isFaster.Value = true;
-            _board.Value.Invoke("DeactiveFast", ActiveTime);
+            _board.ObjectOnScene.Invoke("DeactiveFast", ActiveTime);
         }
 
         private void DeactiveLong()
@@ -91,7 +93,7 @@ namespace Simplenoid
         private void ActiveLong()
         {
             _isLongBoard.Value = true;
-            _board.Value.Invoke("DeactiveLong", ActiveTime);
+            _board.ObjectOnScene.Invoke("DeactiveLong", ActiveTime);
         }
 
         private void ActiveDoubleBall()

@@ -12,26 +12,44 @@ namespace Simplenoid
     public class StarterGamePlayScene : Starter
     {
         [SerializeField] private UserDataVariable _userDataVariable;
+        [SerializeField] private Transform _sceneObject;
+        [SerializeField] private Transform _levelObject;
 
         protected override void Start()
         {
             base.Start();
             Toolbox.Instance.Setup();
 
-            var managerBalls = new ManagerBalls(_userDataVariable.Balls, _userDataVariable.Board);
-            var managerBonuses = new ManagerBonuses(managerBalls, _userDataVariable.Bonuses, _userDataVariable.Board);
+            var bordersGO = Instantiate(_userDataVariable.Borders.PrefabBorder);
+            bordersGO.transform.SetParent(_sceneObject);
 
-            // добавление контроллера управления мячиками
+            var listBorders = bordersGO.GetComponentsInChildren<Border>();
+            foreach (var border in listBorders)
+            {
+                _userDataVariable.Borders.Add(border);
+            }
+
+            _userDataVariable.Board.ObjectOnScene = Instantiate(_userDataVariable.Board.PrefabBoard);
+            _userDataVariable.Board.ObjectOnScene.transform.SetParent(_sceneObject);
+
+            _userDataVariable.GetBalls.Clear();
+
+            var managerBalls = new ManagerBalls(_userDataVariable);
+            managerBalls.InstantiateBall();
+                       
+            var managerBonuses = new ManagerBonuses(managerBalls, _userDataVariable);
+
+            var boardController = Toolbox.Instance.Add<BoardController>();
+            boardController.InitController(managerBalls, managerBonuses, _userDataVariable);
+
             var ballController = Toolbox.Instance.Add<BallsController>();
-            ballController.InitController(managerBalls, managerBonuses);
+            ballController.InitController(managerBalls, managerBonuses, _userDataVariable);
 
-            // добавление контроллера контроля уровней
-            var levelController = Toolbox.Instance.Add<LevelController>();
-            levelController.InitController(managerBalls, _userDataVariable.Levels);
+            //var levelController = Toolbox.Instance.Add<LevelController>();
+            //levelController.InitController(managerBalls, _userDataVariable.Levels);
 
-            // добавление контроллера управления бонусами
             var bonusController = Toolbox.Instance.Add<BonusController>();
-            bonusController.InitController(managerBonuses, _userDataVariable.Bonuses);
+            bonusController.InitController(managerBonuses, _userDataVariable.Bonuses);            
         }
     }
 }
