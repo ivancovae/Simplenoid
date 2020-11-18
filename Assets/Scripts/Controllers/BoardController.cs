@@ -43,12 +43,8 @@ namespace Simplenoid.Controllers
             if (_board.ObjectOnScene.Delta.magnitude > Mathf.Epsilon)
             {
                 var nextPosition = GetNextPosition();
+                CheckBonus(_board.ObjectOnScene, nextPosition);
                 bool isBreakMoving = CheckBorders(_board.ObjectOnScene, nextPosition);
-                if (isBreakMoving)
-                {
-                    return;
-                }
-                isBreakMoving = CheckBonus(_board.ObjectOnScene, nextPosition);
                 if (!isBreakMoving)
                 {
                     _board.ObjectOnScene.Position = nextPosition;

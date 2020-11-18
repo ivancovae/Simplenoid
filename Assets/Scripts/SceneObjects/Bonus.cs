@@ -28,7 +28,7 @@ namespace Simplenoid
             }
             get
             {
-                return _delta * Time.deltaTime;
+                return _delta * _speed;
             }
         }
         public bool IsUsed { get; set; } = false;

@@ -7,6 +7,9 @@ namespace Simplenoid
     [CreateAssetMenu(fileName = "LevelsVariable", menuName = "Variable/Levels Variable")]
     public class LevelsVariable : RuntimeSet<Level>
     {
-        [SerializeField] private List<Level> _prefabsLevels;
+        public List<Level> PrefabsLevels;
+        public int CurrentIndexLevel = 0;
+
+        public Level ObjectOnScene;
     }
 }

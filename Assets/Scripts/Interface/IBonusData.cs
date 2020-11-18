@@ -8,5 +8,8 @@ namespace Simplenoid.Interface
     {
         BonusesVariable GetBonuses { get; }
         BoardVariable GetBoard { get; }
+        BoolVariable GetIsFaster { get; }
+        BoolVariable GetIsSlowly { get; }
+        BoolVariable GetIsLongBoard { get; }
     }
 }

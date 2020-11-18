@@ -197,11 +197,13 @@ namespace Simplenoid.Controllers
             var damageableblock = block.GetComponent<ISetDamage>();
             damageableblock?.SetDamage(ball.Damage);
 
-            if (block.Type == TypesBlocks.WithBonus)
+            if (!block.isAlive)
             {
-                _managerBonuses.InstantiateBonus(block);
+                if (block.Type == TypesBlocks.WithBonus)
+                {
+                    _managerBonuses.InstantiateBonus(block);
+                }
             }
-            Toolbox.Instance.Get<LevelController>().CheckLevel();
         }
 
         private bool CheckBlocks(Ball ball, Vector3 newPos)

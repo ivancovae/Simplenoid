@@ -7,7 +7,7 @@ using Simplenoid.Interface;
 namespace Simplenoid
 {
     [CreateAssetMenu(fileName = "UserDataVariable", menuName = "Variable/User Data Variable")]
-    public class UserDataVariable : ScriptableObject, IBonusData, IBallsData, IBoardData, IBallsControllerData
+    public class UserDataVariable : ScriptableObject, IBonusData, IBallsData, IBoardData, IBallsControllerData, ILevelsData, IBonusControllerData
     {
         public BallsVariable Balls;
         public BallsVariable GetBalls => Balls;

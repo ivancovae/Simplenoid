@@ -14,9 +14,12 @@ namespace Simplenoid
         private BoardVariable _board;
         private BonusesVariable _bonuses;
 
-        [SerializeField] private BoolVariable _isFaster;
-        [SerializeField] private BoolVariable _isSlowly;
-        [SerializeField] private BoolVariable _isLongBoard;
+
+#pragma warning disable 0649
+        private BoolVariable _isFaster;
+        private BoolVariable _isSlowly;
+        private BoolVariable _isLongBoard;
+#pragma warning restore 0649
 
         private ManagerBalls _managerBalls;
 
@@ -26,6 +29,9 @@ namespace Simplenoid
             _board = bonusData.GetBoard;
             _managerBalls = manager;
 
+            _isFaster = bonusData.GetIsFaster;
+            _isSlowly = bonusData.GetIsSlowly;
+            _isLongBoard = bonusData.GetIsLongBoard;
         }
 
         public Vector3 GetDefaultPosition(Block block, Bonus bonus)
@@ -40,7 +46,7 @@ namespace Simplenoid
                 var prefabBonus = _bonuses.PrefabsBonuses.Where(b => b.Type == block.TypeBonus).First();
                 var bonus = GameObject.Instantiate(prefabBonus, Vector3.zero, Quaternion.identity);
                 bonus.Position = GetDefaultPosition(block, bonus);
-                bonus.Delta = new Vector3(0.0f, -3.0f, 0.0f);
+                bonus.Delta = new Vector3(0.0f, -1.0f, 0.0f);
                 _bonuses.Add(bonus);
             }
         }
@@ -107,6 +113,7 @@ namespace Simplenoid
             if (!bonus.IsUsed)
             {
                 bonus.IsUsed = true;
+                RemoveBonus(bonus);
                 switch (bonus.Type)
                 {
                     case TypesBonuses.DoubleBalls:
@@ -135,7 +142,6 @@ namespace Simplenoid
                         }
                         break;
                 }
-                bonus.InstanceObject.SetActive(false);
             }
         }
     }

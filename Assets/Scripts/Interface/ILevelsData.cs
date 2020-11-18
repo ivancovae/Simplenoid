@@ -7,5 +7,6 @@ namespace Simplenoid.Interface
     public interface ILevelsData
     {
         LevelsVariable GetLevels { get; }
+        BlocksVariable GetBlocks { get; }
     }
 }

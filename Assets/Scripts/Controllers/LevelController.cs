@@ -4,53 +4,45 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using Simplenoid.Interface;
+
 namespace Simplenoid.Controllers
 {
-    /// <summary>
-    /// Контроллер управления уровнями
-    /// </summary>
     public class LevelController : BaseController
     {
         private LevelsVariable _levels;
-
-        [SerializeField] private int _selectedIndexLevel;
-        [SerializeField] private Level _selectedLevel;
-
+        private BlocksVariable _blocks;
         private ManagerBalls _managerBalls;
-        /// <summary>
-        /// Инициализация контроллера
-        /// </summary>
-        /// <param name="board">Доска</param>
-        /// <param name="levels">Уровни</param>
-        public void InitController(ManagerBalls managerBalls, LevelsVariable levels)
+        private ManagerLevels _managerLevels;
+
+        protected override void Update()
+        {
+            base.Update();
+
+            CheckLevel();
+        }
+        
+        public void InitController(ManagerBalls managerBalls, ManagerLevels managerLevels, ILevelsData data)
         {
             _managerBalls = managerBalls;
-            _levels = levels;
-            _selectedIndexLevel = 0;
-            _selectedLevel = _levels.Items[_selectedIndexLevel];
+            _managerLevels = managerLevels;
+            _levels = data.GetLevels;
+            _blocks = data.GetBlocks;
+
+            _levels.CurrentIndexLevel = 0;
+
+            _managerLevels.InstantiateLevel();
         }
-        private void ChangeLevel()
-        {
-            _selectedLevel.gameObject.SetActive(false);
-            _selectedIndexLevel++;
-            if (_selectedIndexLevel == _levels.Items.Count)
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-                return;
-            }
-            _selectedLevel = _levels.Items[_selectedIndexLevel];
-            _selectedLevel.gameObject.SetActive(true);
-        }
-        /// <summary>
-        /// Проверка завершенности уровня
-        /// </summary>
         public void CheckLevel()
         {
-            if (_selectedLevel.Blocks.Where(b => b.isAlive).Count() == 0)
+            if (_levels.ObjectOnScene != null)
             {
-                ChangeLevel();
-                _managerBalls.ClearBalls();
-                _managerBalls.InstantiateBall();
+                if (_levels.ObjectOnScene.Blocks.Where(b => b.isAlive).Count() == 0)
+                {
+                    _managerBalls.ClearBalls();
+                    _managerLevels.InstantiateNextLevel();
+                    _managerBalls.InstantiateBall();
+                }
             }
         }
     }

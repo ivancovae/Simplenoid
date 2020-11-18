@@ -8,8 +8,10 @@ namespace Simplenoid.Controllers
 {
     public class BonusController : BaseController
     {
+#pragma warning disable 0649
         [SerializeField] private BonusesVariable _bonuses;
-        [SerializeField] private BordersReference _borders;
+        [SerializeField] private BordersVariable _borders;
+#pragma warning restore 0649
 
         private ManagerBonuses _managerBonuses;
 
@@ -17,15 +19,18 @@ namespace Simplenoid.Controllers
         {
             base.Update();
 
-            foreach (var bonus in _bonuses.Items)
+            for (var i = 0; i < _bonuses.Items.Count; i++)
             {
+                var bonus = _bonuses.Items[i];
                 Move(bonus);
             }
         }
 
-        public void InitController(ManagerBonuses managerBonuses, BonusesVariable bonuses)
+        public void InitController(ManagerBonuses managerBonuses, IBonusControllerData data)
         {
-            _bonuses = bonuses;
+            _bonuses = data.GetBonuses;
+            _bonuses.Clear();
+            _borders = data.GetBorders;
             _managerBonuses = managerBonuses;
         }
         public void Move(Bonus bonus)
@@ -47,7 +52,7 @@ namespace Simplenoid.Controllers
         }
         private Vector3 GetNextPosition(Bonus bonus)
         {
-            var direction = bonus.Delta;
+            var direction = bonus.Delta * Time.deltaTime;
             return bonus.Position + direction;
         }
         private bool Collide(Bonus bonus, Vector3 newPos, ICollidable collideObject)
@@ -66,7 +71,7 @@ namespace Simplenoid.Controllers
         }
         private bool CheckBorders(Bonus bonus, Vector3 newPos)
         {
-            foreach (var border in _borders.Value)
+            foreach (var border in _borders.Items)
             {
                 if (Collide(bonus, newPos, border))
                 {

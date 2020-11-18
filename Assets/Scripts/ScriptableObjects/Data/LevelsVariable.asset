@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f954e33098e23314f8048d9fe15755d6, type: 3}
   m_Name: LevelsVariable
   m_EditorClassIdentifier: 
-  _prefabsLevels:
-  - {fileID: 7389829602185642515, guid: bcc5d4920b636a146947a03831c923b2, type: 3}
+  PrefabsLevels:
+  - {fileID: 5831512480233224253, guid: fb4a0a61d579b2042a47b9824f873083, type: 3}
   - {fileID: 2411959644061920104, guid: 1b740bc8d3fe3fa4b958496adbfa8939, type: 3}
   - {fileID: 5831512480233224253, guid: 9c19c5c1c5ed30342b8912ed687a5459, type: 3}
+  CurrentIndexLevel: 0
+  ObjectOnScene: {fileID: 0}
