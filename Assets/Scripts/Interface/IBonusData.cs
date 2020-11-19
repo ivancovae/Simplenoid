@@ -7,9 +7,6 @@ namespace Simplenoid.Interface
     public interface IBonusData
     {
         BonusesVariable GetBonuses { get; }
-        BoardVariable GetBoard { get; }
-        BoolVariable GetIsFaster { get; }
-        BoolVariable GetIsSlowly { get; }
-        BoolVariable GetIsLongBoard { get; }
+        UnusedBonusesVariable GetUnusedBonuses { get; }
     }
 }

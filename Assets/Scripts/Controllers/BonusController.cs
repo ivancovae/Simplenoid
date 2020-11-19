@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Simplenoid.Interface;
+using Simplenoid.Helpers;
 
 namespace Simplenoid.Controllers
 {
@@ -10,10 +11,23 @@ namespace Simplenoid.Controllers
     {
 #pragma warning disable 0649
         [SerializeField] private BonusesVariable _bonuses;
+        [SerializeField] private UnusedBonusesVariable _unusedBonuses;
         [SerializeField] private BordersVariable _borders;
 #pragma warning restore 0649
 
+#pragma warning disable 0649
+        private BoolVariable _isFaster;
+        private BoolVariable _isSlowly;
+        private BoolVariable _isLongBoard;
+        private FloatVariable _activeTime;
+#pragma warning restore 0649
+
         private ManagerBonuses _managerBonuses;
+        private ManagerBalls _managerBalls;
+        
+        private Coroutine _fasterRoutine;
+        private Coroutine _slowlyRoutine;
+        private Coroutine _longBoardRoutine;
 
         protected override void Update()
         {
@@ -24,14 +38,29 @@ namespace Simplenoid.Controllers
                 var bonus = _bonuses.Items[i];
                 Move(bonus);
             }
+
+            for (var i = 0; i < _unusedBonuses.Items.Count; i++)
+            {
+                var bonus = _unusedBonuses.Items[i];
+                ActiveBonus(bonus);
+            }
         }
 
-        public void InitController(ManagerBonuses managerBonuses, IBonusControllerData data)
+        public void InitController(ManagerBonuses managerBonuses, ManagerBalls managerBalls, IBonusControllerData data)
         {
             _bonuses = data.GetBonuses;
             _bonuses.Clear();
+            _unusedBonuses = data.GetUnusedBonuses;
+            _unusedBonuses.Clear();
+
             _borders = data.GetBorders;
             _managerBonuses = managerBonuses;
+            _managerBalls = managerBalls;
+
+            _isFaster = data.GetIsFaster;
+            _isSlowly = data.GetIsSlowly;
+            _isLongBoard = data.GetIsLongBoard;
+            _activeTime = data.GetActiveTime;
         }
         public void Move(Bonus bonus)
         {
@@ -79,6 +108,68 @@ namespace Simplenoid.Controllers
                 }
             }
             return false;
+        }
+
+        IEnumerator EnableBonus(BoolVariable variable)
+        {
+            variable.Value = true;
+            yield return new WaitForSeconds(_activeTime.Value);
+            variable.Value = false;
+        }
+
+        private void ActiveBonus(Bonus bonus)
+        {
+            if (!bonus.IsUsed)
+            {
+                bonus.IsUsed = true;
+                _managerBonuses.RemoveBonus(bonus);
+                switch (bonus.Type)
+                {
+                    case TypesBonuses.DoubleBalls:
+                        {
+                            _managerBalls.InstantiateBall();
+                        }
+                        break;
+                    case TypesBonuses.FasterBalls:
+                        {
+                            if (_fasterRoutine != null)
+                            {
+                                StopCoroutine(_fasterRoutine);
+                                _fasterRoutine = null;
+                            }
+                            var routine = EnableBonus(_isFaster);
+                            _fasterRoutine = StartCoroutine(routine);
+                        }
+                        break;
+                    case TypesBonuses.LongBoard:
+                        {
+                            if (_longBoardRoutine != null)
+                            {
+                                StopCoroutine(_longBoardRoutine);
+                                _longBoardRoutine = null;
+                            }
+                            var routine = EnableBonus(_isLongBoard);
+                            _longBoardRoutine = StartCoroutine(routine);
+                        }
+                        break;
+                    case TypesBonuses.SlowerBalls:
+                        {
+                            if (_slowlyRoutine != null)
+                            {
+                                StopCoroutine(_slowlyRoutine);
+                                _slowlyRoutine = null;
+                            }
+                            var routine = EnableBonus(_isSlowly);
+                            _slowlyRoutine = StartCoroutine(routine);
+                        }
+                        break;
+                    default:
+                        {
+                            Debug.LogError("Unknown type bonus");
+                        }
+                        break;
+                }
+            }
         }
     }
 }

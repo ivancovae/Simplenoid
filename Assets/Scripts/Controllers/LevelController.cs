@@ -14,6 +14,7 @@ namespace Simplenoid.Controllers
         private BlocksVariable _blocks;
         private ManagerBalls _managerBalls;
         private ManagerLevels _managerLevels;
+        private ManagerBonuses _managerBonuses;
 
         protected override void Update()
         {
@@ -22,10 +23,11 @@ namespace Simplenoid.Controllers
             CheckLevel();
         }
         
-        public void InitController(ManagerBalls managerBalls, ManagerLevels managerLevels, ILevelsData data)
+        public void InitController(ManagerBalls managerBalls, ManagerLevels managerLevels, ManagerBonuses managerBonuses, ILevelsData data)
         {
             _managerBalls = managerBalls;
             _managerLevels = managerLevels;
+            _managerBonuses = managerBonuses;
             _levels = data.GetLevels;
             _blocks = data.GetBlocks;
 
@@ -40,6 +42,7 @@ namespace Simplenoid.Controllers
                 if (_levels.ObjectOnScene.Blocks.Where(b => b.isAlive).Count() == 0)
                 {
                     _managerBalls.ClearBalls();
+                    _managerBonuses.ClearBonuses();
                     _managerLevels.InstantiateNextLevel();
                     _managerBalls.InstantiateBall();
                 }

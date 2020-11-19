@@ -30,34 +30,50 @@ namespace Simplenoid
         }
         public Vector2 Size { get; private set; }
         private SpriteRenderer _spriteRenderer;
+        
+        public Vector3 PointLT => new Vector3(Position.x, Position.y + Size.y, Position.z);
+        public Vector3 PointRT => new Vector3(Position.x + Size.x, Position.y + Size.y, Position.z);
+        public Vector3 PointRB => new Vector3(Position.x + Size.x, Position.y, Position.z);
+        public Vector3 PointLB => Position;
+        public Vector2 DefaultSize { get; private set; }
 
-        [SerializeField] bool _isLongBoard = false;
-        public bool IsLongBoard 
-        {
-            get => _isLongBoard;
-            set
-            {
-                _isLongBoard = value;
-                if (_isLongBoard)
-                {
-                    _spriteRenderer.size = new Vector2(_spriteRenderer.size.x + _extraSize, _spriteRenderer.size.y);
-                } 
-                else
-                {
-                    _spriteRenderer.size = _defaultSize;
-                }
-                Size = _spriteRenderer.bounds.size;
-            }
-        }
-        [SerializeField] private Vector2 _defaultSize;
         [SerializeField] private float _extraSize = 3.0f;
+        public float ExtraSize => _extraSize;
+
+        private bool _isLongSize = false;
+
+        public void ChangeSize(bool isLongSize)
+        {
+            if (isLongSize == _isLongSize)
+                return;
+
+            if (isLongSize)
+            {
+                _spriteRenderer.size = new Vector2(_spriteRenderer.size.x + ExtraSize, _spriteRenderer.size.y);
+            }
+            else
+            {
+                _spriteRenderer.size = DefaultSize;
+            }
+            Size = _spriteRenderer.bounds.size;
+            _isLongSize = isLongSize;
+        }
 
         protected override void Awake()
         {
             base.Awake();
             _spriteRenderer = GetComponent<SpriteRenderer>();
             Size = _spriteRenderer.bounds.size;
-            _defaultSize = _spriteRenderer.size;
+            DefaultSize = _spriteRenderer.size;
+        }
+        protected override void Update()
+        {
+            base.Update();
+
+            Debug.DrawLine(PointLB, PointLT, Color.red);
+            Debug.DrawLine(PointLT, PointRT, Color.red);
+            Debug.DrawLine(PointRT, PointRB, Color.red);
+            Debug.DrawLine(PointRB, PointLB, Color.red);
         }
     }
 }

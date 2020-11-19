@@ -40,7 +40,7 @@ namespace Simplenoid
             var managerBalls = new ManagerBalls(_userDataVariable);
             managerBalls.InstantiateBall();
                        
-            var managerBonuses = new ManagerBonuses(managerBalls, _userDataVariable);
+            var managerBonuses = new ManagerBonuses(_userDataVariable);
 
             var boardController = Toolbox.Instance.Add<BoardController>();
             boardController.InitController(managerBalls, managerBonuses, _userDataVariable);
@@ -51,10 +51,10 @@ namespace Simplenoid
             var managerLevels = new ManagerLevels(_userDataVariable, _levelObject);
 
             var levelController = Toolbox.Instance.Add<LevelController>();
-            levelController.InitController(managerBalls, managerLevels, _userDataVariable);
+            levelController.InitController(managerBalls, managerLevels, managerBonuses, _userDataVariable);
 
             var bonusController = Toolbox.Instance.Add<BonusController>();
-            bonusController.InitController(managerBonuses, _userDataVariable);            
+            bonusController.InitController(managerBonuses, managerBalls, _userDataVariable);            
         }
     }
 }

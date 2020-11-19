@@ -35,7 +35,15 @@ namespace Simplenoid
         /// Состояние жизни Блока
         /// </summary>
         public bool isAlive => _lives > 0;
-        
+
+        public Vector3 PointLT => new Vector3(Position.x, Position.y + Size.y, Position.z);
+
+        public Vector3 PointRT => new Vector3(Position.x + Size.x, Position.y + Size.y, Position.z);
+
+        public Vector3 PointRB => new Vector3(Position.x + Size.x, Position.y, Position.z);
+
+        public Vector3 PointLB => Position;
+
         protected override void Awake()
         {
             base.Awake();
@@ -54,6 +62,15 @@ namespace Simplenoid
             {
                 InstanceObject.SetActive(false);
             }
+        }
+        protected override void Update()
+        {
+            base.Update();
+
+            Debug.DrawLine(PointLB, PointLT, Color.cyan);
+            Debug.DrawLine(PointLT, PointRT, Color.cyan);
+            Debug.DrawLine(PointRT, PointRB, Color.cyan);
+            Debug.DrawLine(PointRB, PointLB, Color.cyan);
         }
     }
 }

@@ -23,6 +23,11 @@ namespace Simplenoid
         
         public void InstantiateBall()
         {
+            if (_board.ObjectOnScene.Ball != null)
+            {
+                Jump(_board.ObjectOnScene.Ball);
+                _board.ObjectOnScene.Ball = null;
+            }
             var ball = GameObject.Instantiate(_balls.PrefabBall, Vector3.zero, Quaternion.identity);
             ball.Position = GetDefaultPosition(ball);
             _board.ObjectOnScene.Ball = ball;

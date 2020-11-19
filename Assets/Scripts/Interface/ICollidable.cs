@@ -17,5 +17,10 @@ namespace Simplenoid.Interface
         /// Позиция объекта
         /// </summary>
         Vector3 Position { get; }
+
+        Vector3 PointLT { get; }
+        Vector3 PointRT { get; }
+        Vector3 PointRB { get; }
+        Vector3 PointLB { get; }
     }
 }

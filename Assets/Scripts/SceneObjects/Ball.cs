@@ -38,12 +38,29 @@ namespace Simplenoid
 
         [SerializeField] private int _damage = 1;
         public int Damage => _damage;
-                
+
+        public Vector3 PointLT => new Vector3(Position.x, Position.y + Size.y, Position.z);
+
+        public Vector3 PointRT => new Vector3(Position.x + Size.x, Position.y + Size.y, Position.z);
+
+        public Vector3 PointRB => new Vector3(Position.x + Size.x, Position.y, Position.z);
+
+        public Vector3 PointLB => Position;
+
         protected override void Awake()
         {
             base.Awake();
             _spriteRenderer = GetComponent<SpriteRenderer>();
             Size = _spriteRenderer.bounds.size;
+        }
+        protected override void Update()
+        {
+            base.Update();
+
+            Debug.DrawLine(PointLB, PointLT, Color.magenta);
+            Debug.DrawLine(PointLT, PointRT, Color.magenta);
+            Debug.DrawLine(PointRT, PointRB, Color.magenta);
+            Debug.DrawLine(PointRB, PointLB, Color.magenta);
         }
     }
 }

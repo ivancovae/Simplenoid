@@ -15,12 +15,16 @@ namespace Simplenoid.Controllers
         [SerializeField] private BordersVariable _borders;
         [SerializeField] private BonusesVariable _bonuses;
 
+        [SerializeField] private BoolVariable _isLongBoard;
+
         private ManagerBalls _managerBalls;
         private ManagerBonuses _managerBonuses;
 
         protected override void Update()
         {
             base.Update();
+
+            _board.ObjectOnScene.ChangeSize(_isLongBoard.Value);
 
             if (Input.GetButtonUp(_jump))
             {
@@ -69,14 +73,14 @@ namespace Simplenoid.Controllers
         public void Stop(Border border)
         {
             var nextPos = GetNextPosition();
-            if ((nextPos.x < border.Position.x + border.Size.x) && (nextPos.x + _board.ObjectOnScene.Size.x > border.Position.x + border.Size.x))
+            if ((nextPos.x < border.PointRB.x) && (nextPos.x + _board.ObjectOnScene.Size.x > border.PointRB.x))
             {
-                _board.ObjectOnScene.Position = new Vector3(border.Position.x + border.Size.x, _board.ObjectOnScene.Position.y, _board.ObjectOnScene.Position.z);
+                _board.ObjectOnScene.Position = new Vector3(border.PointRB.x, _board.ObjectOnScene.Position.y, _board.ObjectOnScene.Position.z);
             }
 
-            if ((nextPos.x + _board.ObjectOnScene.Size.x > border.Position.x) && (nextPos.x < border.Position.x))
+            if ((nextPos.x + _board.ObjectOnScene.Size.x > border.PointLB.x) && (nextPos.x < border.PointLB.x))
             {
-                _board.ObjectOnScene.Position = new Vector3(border.Position.x - _board.ObjectOnScene.Size.x, _board.ObjectOnScene.Position.y, _board.ObjectOnScene.Position.z);
+                _board.ObjectOnScene.Position = new Vector3(border.PointLB.x - _board.ObjectOnScene.Size.x, _board.ObjectOnScene.Position.y, _board.ObjectOnScene.Position.z);
             }
 
             _board.ObjectOnScene.Delta = Vector2.zero;
@@ -90,10 +94,10 @@ namespace Simplenoid.Controllers
         {
             if (collideObject != null)
             {
-                if (newPos.x + board.Size.x > collideObject.Position.x &&
-                    newPos.x < collideObject.Position.x + collideObject.Size.x &&
-                    newPos.y + board.Size.y > collideObject.Position.y &&
-                    newPos.y < collideObject.Position.y + collideObject.Size.y)
+                if (newPos.x + board.Size.x > collideObject.PointLB.x &&
+                    newPos.x < collideObject.PointRT.x &&
+                    newPos.y + board.Size.y > collideObject.PointLB.y &&
+                    newPos.y < collideObject.PointRT.y)
                 {
                     return true;
                 }
@@ -115,8 +119,9 @@ namespace Simplenoid.Controllers
 
         private bool CheckBonus(Board board, Vector3 newPos)
         {
-            foreach (var bonus in _bonuses.Items)
+            for (var i = 0; i < _bonuses.Items.Count; i++)
             {
+                var bonus = _bonuses.Items[i];
                 if (Collide(board, newPos, bonus))
                 {
                     _managerBonuses.ActiveBonus(bonus);
@@ -133,6 +138,7 @@ namespace Simplenoid.Controllers
             _borders = data.GetBorders;
             _managerBalls = managerBalls;
             _managerBonuses = managerBonuses;
+            _isLongBoard = data.GetIsLongBoard;
         }
     }
 }

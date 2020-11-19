@@ -11,27 +11,13 @@ namespace Simplenoid
     public class ManagerBonuses
     {
         public float ActiveTime { get; private set; } = 3.0f;
-        private BoardVariable _board;
         private BonusesVariable _bonuses;
+        private UnusedBonusesVariable _unusedBonuses;
 
-
-#pragma warning disable 0649
-        private BoolVariable _isFaster;
-        private BoolVariable _isSlowly;
-        private BoolVariable _isLongBoard;
-#pragma warning restore 0649
-
-        private ManagerBalls _managerBalls;
-
-        public ManagerBonuses(ManagerBalls manager, IBonusData bonusData)
+        public ManagerBonuses(IBonusData bonusData)
         {
             _bonuses = bonusData.GetBonuses;
-            _board = bonusData.GetBoard;
-            _managerBalls = manager;
-
-            _isFaster = bonusData.GetIsFaster;
-            _isSlowly = bonusData.GetIsSlowly;
-            _isLongBoard = bonusData.GetIsLongBoard;
+            _unusedBonuses = bonusData.GetUnusedBonuses;
         }
 
         public Vector3 GetDefaultPosition(Block block, Bonus bonus)
@@ -68,81 +54,11 @@ namespace Simplenoid
             _bonuses.Clear();
         }
 
-        #region Bonuses Action
-        private void DeactiveSlow()
-        {
-            _isSlowly.Value = false;
-        }
-
-        private void ActiveSlow()
-        {
-            _isSlowly.Value = true;
-            _board.ObjectOnScene.Invoke("DeactiveSlow", ActiveTime);
-        }
-
-        private void DeactiveFast()
-        {
-            _isFaster.Value = false;
-        }
-
-        private void ActiveFast()
-        {
-            _isFaster.Value = true;
-            _board.ObjectOnScene.Invoke("DeactiveFast", ActiveTime);
-        }
-
-        private void DeactiveLong()
-        {
-            _isLongBoard.Value = false;
-        }
-
-        private void ActiveLong()
-        {
-            _isLongBoard.Value = true;
-            _board.ObjectOnScene.Invoke("DeactiveLong", ActiveTime);
-        }
-
-        private void ActiveDoubleBall()
-        {
-            _managerBalls.InstantiateBall();
-        }
-        #endregion
-
         public void ActiveBonus(Bonus bonus)
         {
-            if (!bonus.IsUsed)
-            {
-                bonus.IsUsed = true;
-                RemoveBonus(bonus);
-                switch (bonus.Type)
-                {
-                    case TypesBonuses.DoubleBalls:
-                        {
-                            ActiveDoubleBall();
-                        }
-                        break;
-                    case TypesBonuses.FasterBalls:
-                        {
-                            ActiveFast();
-                        }
-                        break;
-                    case TypesBonuses.LongBoard:
-                        {
-                            ActiveLong();
-                        }
-                        break;
-                    case TypesBonuses.SlowerBalls:
-                        {
-                            ActiveSlow();
-                        }
-                        break;
-                    default:
-                        {
-                            Debug.LogError("Unknown type bonus");
-                        }
-                        break;
-                }
-            }
+            bonus.Delta = Vector3.zero;
+            bonus.InstanceObject.SetActive(false);
+            _unusedBonuses.Add(bonus);
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Simplenoid.Interface
     public interface IBoardData
     {
         BoardVariable GetBoard { get; }
+        BoolVariable GetIsLongBoard { get; }
         BordersVariable GetBorders { get; }
         BonusesVariable GetBonuses { get; }
     }

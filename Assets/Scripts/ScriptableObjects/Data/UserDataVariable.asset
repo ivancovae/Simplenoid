@@ -23,3 +23,4 @@ MonoBehaviour:
   IsLongBoard: {fileID: 11400000, guid: dffcd604751b90d4ca568fbfdf7d1e94, type: 2}
   Divider: {fileID: 11400000, guid: d2f04c3ad20e18a4883930a68f06620c, type: 2}
   ActiveTime: {fileID: 11400000, guid: 9e4f6533b409bad40833954723cf3323, type: 2}
+  UnusedBonuses: {fileID: 11400000, guid: 165eae57b12c8d34bbcda94be467065c, type: 2}

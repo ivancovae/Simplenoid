@@ -41,5 +41,9 @@ namespace Simplenoid
 
         [Header("Bonus time")]
         public FloatVariable ActiveTime;
+        public FloatVariable GetActiveTime => ActiveTime;
+
+        public UnusedBonusesVariable UnusedBonuses;
+        public UnusedBonusesVariable GetUnusedBonuses => UnusedBonuses;
     }
 }
