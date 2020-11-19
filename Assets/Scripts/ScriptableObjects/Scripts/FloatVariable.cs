@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Объект хранения значения типа float
+    /// </summary>
     [CreateAssetMenu(fileName = "FloatVariable", menuName = "Variable/Float Variable")]
     public class FloatVariable : ScriptableObject
     {

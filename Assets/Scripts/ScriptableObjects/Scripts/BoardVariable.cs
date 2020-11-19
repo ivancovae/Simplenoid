@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Объект хранения доски на сцене
+    /// </summary>
     [CreateAssetMenu(fileName = "BoardVariable", menuName = "Variable/Board Variable")]
     public class BoardVariable : ScriptableObject
     {

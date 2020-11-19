@@ -8,6 +8,9 @@ using Simplenoid.Interface;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Менеджер шаров
+    /// </summary>
     public class ManagerBalls
     {
         private BallsVariable _balls;

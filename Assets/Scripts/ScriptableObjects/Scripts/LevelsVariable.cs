@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Объект всех уровней на сцене
+    /// </summary>
     [CreateAssetMenu(fileName = "LevelsVariable", menuName = "Variable/Levels Variable")]
     public class LevelsVariable : RuntimeSet<Level>
     {

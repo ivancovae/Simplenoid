@@ -7,6 +7,9 @@ using Simplenoid.Helpers;
 
 namespace Simplenoid.Controllers
 {
+    /// <summary>
+    /// Контролер управления бонусами
+    /// </summary>
     public class BonusController : BaseController
     {
 #pragma warning disable 0649

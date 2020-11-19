@@ -12,8 +12,9 @@ namespace Simplenoid
     [RequireComponent(typeof(SpriteRenderer))]
     public class Ball : BaseObjectScene, ICollidable
     {
-        [SerializeField] private Vector3 _velocity = new Vector3(6.0f, 6.0f, 0.0f);
-        public Vector3 Velocity => _velocity;
+        [SerializeField] private float _speed = 2.0f;
+        private Vector3 _velocity = new Vector3(1.0f, 1.0f, 0.0f);
+        public Vector3 Velocity => _velocity * _speed;
         [SerializeField] private Vector3 _delta = Vector3.zero;
 
         /// <summary>
@@ -52,15 +53,6 @@ namespace Simplenoid
             base.Awake();
             _spriteRenderer = GetComponent<SpriteRenderer>();
             Size = _spriteRenderer.bounds.size;
-        }
-        protected override void Update()
-        {
-            base.Update();
-
-            Debug.DrawLine(PointLB, PointLT, Color.magenta);
-            Debug.DrawLine(PointLT, PointRT, Color.magenta);
-            Debug.DrawLine(PointRT, PointRB, Color.magenta);
-            Debug.DrawLine(PointRB, PointLB, Color.magenta);
         }
     }
 }

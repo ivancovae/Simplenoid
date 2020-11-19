@@ -5,6 +5,9 @@ using UnityEngine.Events;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Компонент слушателя события на сцене
+    /// </summary>
     public class GameEventListener : MonoBehaviour
     {
         public GameEvent Event;

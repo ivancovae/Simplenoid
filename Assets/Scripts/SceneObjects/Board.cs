@@ -7,6 +7,9 @@ using Simplenoid.Controllers;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Компонент доска
+    /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
     public class Board : BaseObjectScene, ICollidable
     {
@@ -21,7 +24,7 @@ namespace Simplenoid
         {
             get
             {
-                return _delta * Time.deltaTime;
+                return _delta;
             }
             set
             {
@@ -65,15 +68,6 @@ namespace Simplenoid
             _spriteRenderer = GetComponent<SpriteRenderer>();
             Size = _spriteRenderer.bounds.size;
             DefaultSize = _spriteRenderer.size;
-        }
-        protected override void Update()
-        {
-            base.Update();
-
-            Debug.DrawLine(PointLB, PointLT, Color.red);
-            Debug.DrawLine(PointLT, PointRT, Color.red);
-            Debug.DrawLine(PointRT, PointRB, Color.red);
-            Debug.DrawLine(PointRB, PointLB, Color.red);
         }
     }
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Simplenoid.Interface
 {
+    /// <summary>
+    /// Интерфейс для контроллера уровней
+    /// </summary>
     public interface ILevelsData
     {
         LevelsVariable GetLevels { get; }

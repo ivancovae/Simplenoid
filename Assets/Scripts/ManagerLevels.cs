@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Менеджер уровней
+    /// </summary>
     public class ManagerLevels
     {
         private LevelsVariable _levels;

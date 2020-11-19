@@ -40,14 +40,5 @@ namespace Simplenoid
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _size = _spriteRenderer.bounds.size;
         }
-        protected override void Update()
-        {
-            base.Update();
-
-            Debug.DrawLine(PointLB, PointLT, Color.blue);
-            Debug.DrawLine(PointLT, PointRT, Color.blue);
-            Debug.DrawLine(PointRT, PointRB, Color.blue);
-            Debug.DrawLine(PointRB, PointLB, Color.blue);
-        }
     }
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Объект хранения всех блоков на сцене
+    /// </summary>
     [CreateAssetMenu(fileName = "BlocksVariable", menuName = "Variable/Blocks Variable")]
     public class BlocksVariable : RuntimeSet<Block>
     {

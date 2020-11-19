@@ -6,6 +6,9 @@ using Simplenoid.Interface;
 
 namespace Simplenoid.Controllers
 {
+    /// <summary>
+    /// Контроллер управления доской
+    /// </summary>
     public class BoardController : BaseController
     {
         private string _horizontal = "Horizontal";
@@ -38,25 +41,22 @@ namespace Simplenoid.Controllers
 
         private Vector3 GetNextPosition()
         {
-            var direction = _board.ObjectOnScene.Delta;
+            var direction = _board.ObjectOnScene.Delta * Time.deltaTime;
             return _board.ObjectOnScene.Position + direction;
         }
-        
+
         private void Move()
         {
-            if (_board.ObjectOnScene.Delta.magnitude > Mathf.Epsilon)
+            var nextPosition = GetNextPosition();
+            CheckBonus(_board.ObjectOnScene, nextPosition);
+            bool isBreakMoving = CheckBorders(_board.ObjectOnScene, nextPosition);
+            if (!isBreakMoving)
             {
-                var nextPosition = GetNextPosition();
-                CheckBonus(_board.ObjectOnScene, nextPosition);
-                bool isBreakMoving = CheckBorders(_board.ObjectOnScene, nextPosition);
-                if (!isBreakMoving)
-                {
-                    _board.ObjectOnScene.Position = nextPosition;
+                _board.ObjectOnScene.Position = nextPosition;
 
-                    if (_board.ObjectOnScene.Ball != null)
-                    {
-                        _board.ObjectOnScene.Ball.Position += _board.ObjectOnScene.Delta;
-                    }
+                if (_board.ObjectOnScene.Ball != null)
+                {
+                    _board.ObjectOnScene.Ball.Position += _board.ObjectOnScene.Delta * Time.deltaTime;
                 }
             }
         }

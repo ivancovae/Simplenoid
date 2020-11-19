@@ -8,6 +8,9 @@ using Simplenoid.Interface;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Менеджер бонусов
+    /// </summary>
     public class ManagerBonuses
     {
         public float ActiveTime { get; private set; } = 3.0f;

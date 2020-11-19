@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Объект хранения значения типа bool
+    /// </summary>
     [CreateAssetMenu(fileName = "BoolVariable", menuName = "Variable/Bool Variable")]
     public class BoolVariable : ScriptableObject
     {

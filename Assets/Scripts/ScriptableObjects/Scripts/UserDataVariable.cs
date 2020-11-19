@@ -6,6 +6,9 @@ using Simplenoid.Interface;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Объект пользовательских данных и стартовых настроек
+    /// </summary>
     [CreateAssetMenu(fileName = "UserDataVariable", menuName = "Variable/User Data Variable")]
     public class UserDataVariable : ScriptableObject, IBonusData, IBallsData, IBoardData, IBallsControllerData, ILevelsData, IBonusControllerData
     {
@@ -27,8 +30,6 @@ namespace Simplenoid
         public BonusesVariable Bonuses;
         public BonusesVariable GetBonuses => Bonuses;
         
-
-
         // bonuses 
         public BoolVariable IsFaster;
         public BoolVariable GetIsFaster => IsFaster;

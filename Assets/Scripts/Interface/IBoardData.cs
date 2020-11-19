@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Simplenoid.Interface
 {
+    /// <summary>
+    /// Интерфейс для контроллера управления доской
+    /// </summary>
     public interface IBoardData
     {
         BoardVariable GetBoard { get; }

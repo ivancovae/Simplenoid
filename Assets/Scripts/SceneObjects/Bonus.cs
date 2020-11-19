@@ -7,6 +7,9 @@ using Simplenoid.Helpers;
 
 namespace Simplenoid
 {
+    /// <summary>
+    /// Компонент летящий бонус
+    /// </summary>
     public class Bonus : BaseObjectScene, ICollidable
     {
         [SerializeField] private float _speed = 3.0f;
@@ -46,16 +49,6 @@ namespace Simplenoid
             base.Awake();
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _size = _spriteRenderer.bounds.size;
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-
-            Debug.DrawLine(PointLB, PointLT, Color.green);
-            Debug.DrawLine(PointLT, PointRT, Color.green);
-            Debug.DrawLine(PointRT, PointRB, Color.green);
-            Debug.DrawLine(PointRB, PointLB, Color.green);
         }
     }
 }

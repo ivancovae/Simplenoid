@@ -8,6 +8,9 @@ using Simplenoid.Interface;
 
 namespace Simplenoid.Controllers
 {
+    /// <summary>
+    /// Контроллер управления уровнями
+    /// </summary>
     public class LevelController : BaseController
     {
         private LevelsVariable _levels;

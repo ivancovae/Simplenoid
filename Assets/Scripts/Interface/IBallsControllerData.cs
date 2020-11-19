@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Simplenoid.Interface
 {
+    /// <summary>
+    /// Интерфейс данных для контроллера управления шарами
+    /// </summary>
     public interface IBallsControllerData
     {
         BallsVariable GetBalls { get; }

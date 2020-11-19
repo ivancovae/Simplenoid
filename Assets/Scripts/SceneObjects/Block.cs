@@ -63,14 +63,5 @@ namespace Simplenoid
                 InstanceObject.SetActive(false);
             }
         }
-        protected override void Update()
-        {
-            base.Update();
-
-            Debug.DrawLine(PointLB, PointLT, Color.cyan);
-            Debug.DrawLine(PointLT, PointRT, Color.cyan);
-            Debug.DrawLine(PointRT, PointRB, Color.cyan);
-            Debug.DrawLine(PointRB, PointLB, Color.cyan);
-        }
     }
 }

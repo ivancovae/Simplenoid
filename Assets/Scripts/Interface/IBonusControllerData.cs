@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Simplenoid.Interface
 {
+    /// <summary>
+    /// Интерфейс для контроллера управления летящими бонусами
+    /// </summary>
     public interface IBonusControllerData
     {
         BonusesVariable GetBonuses { get; }
